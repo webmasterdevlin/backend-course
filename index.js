@@ -1,14 +1,11 @@
 require("dotenv").config(); // for .env file
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const todoModel = require("./todo");
 
 const server = express();
-// parse application/x-www-form-urlencoded
-server.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
-server.use(bodyParser.json());
+server.use(express.json());
 
 // req is the request object
 // res is the response object
