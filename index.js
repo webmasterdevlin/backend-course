@@ -27,9 +27,19 @@ server.post("/api/todos", async (request, response) => {
     response.status(500).send(error);
   }
 });
-server.delete("/api/todos/:id", (request, response) => {
-  // req.params is the parameters of the request
-  response.status(204).send();
+server.delete("/api/todos/:id", async (request, response) => {
+  try {
+    // req.params is the parameters of the request
+    const { id } = request.params;
+    const todo = await todoModel.findByIdAndDelete(id);
+    if (!todo) {
+      response.status(404).send("Todo not found");
+    } else {
+      response.status(204).send();
+    }
+  } catch (error) {
+    response.status(500).send(error);
+  }
 });
 // url parameters are available in req.params
 server.put("/api/todos/:id", (request, response) => {
