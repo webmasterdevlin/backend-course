@@ -42,8 +42,16 @@ server.delete("/api/todos/:id", async (request, response) => {
   }
 });
 // url parameters are available in req.params
-server.put("/api/todos/:id", (request, response) => {
-  response.send({ id: req.params.id, title: "todo updated" });
+server.put("/api/todos/:id", async (request, response) => {
+  try {
+    await todoModel.findByIdAndUpdate(request.params.id, request.body, {
+      new: true,
+    });
+    
+    response.status(204).send();
+  } catch (error) {
+    response.status(500).send(error);
+  }
 });
 // query params sample in express
 // query parameter starts with question mark. api/todos?message=hello in the front end
