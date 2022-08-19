@@ -7,12 +7,22 @@ const server = express();
 // req is the request object
 // res is the response object
 server.get("/api/todos", async (request, response) => {
-  const todos = await todoModel.find();
-  response.send(todos);
+  try {
+    const todos = await todoModel.find();
+    response.send(todos);
+  } catch (error) {
+    response.status(500).send(error);
+  }
 });
-server.post("/api/todos", (request, response) => {
+server.post("/api/todos", async (request, response) => {
   //  req.body is the body of the request
-  response.status(201).send({ id: 3, title: "todo3" });
+  try {
+    const todo = new todoModel(request.body);
+    await todo.save();
+    response.status(201).send(todo);
+  } catch (error) {
+    response.status(500).send(error);
+  }
 });
 server.delete("/api/todos/:id", (request, response) => {
   // req.params is the parameters of the request
